@@ -140,7 +140,11 @@ def dyn_reconf_callback(config):
     pass
 
 def main():
-    initial_params = [0.0, 0.0, 0.0]
+    kp = rospy.get_param('~kp', 0.0)
+    ki = rospy.get_param('~ki', 0.0)
+    kd = rospy.get_param('~kd', 0.0)
+
+    initial_params = [kp, ki, kd]
     twiddle_hover = Twiddle(algorithm, initial_params)
 
     print("Initial Params: kp:{}, ki:{}, kd:{}".format(initial_params[0], initial_params[1], initial_params[2]))
@@ -157,7 +161,7 @@ if __name__ == '__main__':
     rate = rospy.Rate(10)
 
     pose_sub_ = rospy.Subscriber("/quad_rotor/pose", PoseStamped, pose_callback)
-    cmd_force_pub_ = rospy.Publisher("/quad_rotor/cmd_force", Wrench, queue_size=10)
+    #cmd_force_pub_ = rospy.Publisher("/quad_rotor/cmd_force", Wrench, queue_size=10)
     dyn_reconf_client = dynamic_reconfigure.client.Client('/hover_controller', config_callback=dyn_reconf_callback)
 
     initial_setup()

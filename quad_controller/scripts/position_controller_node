@@ -124,13 +124,13 @@ class PositionControllerNode():
             t = pose_msg.header.stamp.to_sec()
 
             # Control Roll to to move along Y
-            roll_cmd = -(1/9.81) * self.y_controller_.update(pose_msg.pose.position.y, t)
+            roll_cmd = -(1/9.81) * self.y_controller_.update(pose_msg.pose.position.y, t)[0]
 
             # Control Pitch to move along X
-            pitch_cmd = (1/9.81) * self.x_controller_.update(pose_msg.pose.position.x, t)
+            pitch_cmd = (1/9.81) * self.x_controller_.update(pose_msg.pose.position.x, t)[0]
 
             # Control Thrust to move along Z
-            thrust = self.z_controller_.update(pose_msg.pose.position.z, t)
+            thrust = self.z_controller_.update(pose_msg.pose.position.z, t)[0]
 
             roll =  limit(roll_cmd, -15*(math.pi/180), +15*(math.pi/180))
             pitch = limit(pitch_cmd, -15*(math.pi/180), +15*(math.pi/180))

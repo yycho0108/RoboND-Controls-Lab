@@ -1,14 +1,14 @@
-x_kp: 0.0
-x_ki: 0.0
-x_ki_max: 0.0
-x_kd: 0.0
+x_kp: 10.0
+x_ki: 2.0
+x_ki_max: 10.0
+x_kd: 9.0
 
-y_kp: 0.0
-y_ki: 0.0
-y_ki_max: 0.0
-y_kd: 0.0
+y_kp: 10.0
+y_ki: 2.0
+y_ki_max: 10.0
+y_kd: 9.0
 
-z_kp: 0.0
-z_ki: 0.0
-z_ki_max: 10
-z_kd: 0.0
+z_kp: 9.7642
+z_ki: 3.0838
+z_ki_max: 10.0
+z_kd: 2.8050

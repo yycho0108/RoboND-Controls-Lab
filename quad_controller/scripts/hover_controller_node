@@ -11,9 +11,9 @@ import math
 from geometry_msgs.msg import Wrench
 from geometry_msgs.msg import PoseStamped
 from quad_controller.pid_controller import PIDController
-
 from dynamic_reconfigure.server import Server
 from quad_controller.cfg import hover_controller_paramsConfig
+from std_msgs.msg import Float32
 
 class HoverControllerNode():
     def __init__(self):
@@ -30,12 +30,17 @@ class HoverControllerNode():
         self.pose_sub_ = rospy.Subscriber("/quad_rotor/pose", PoseStamped, self.pose_callback)
         self.cmd_force_pub_ = rospy.Publisher("/quad_rotor/cmd_force", Wrench, queue_size=10)
 
+        self._u_p_pub = rospy.Publisher("/u_p", Float32, queue_size=10)
+        self._u_i_pub = rospy.Publisher("/u_i", Float32, queue_size=10)
+        self._u_d_pub = rospy.Publisher("/u_d", Float32, queue_size=10)
+
         srv = Server(hover_controller_paramsConfig, self.config_callback)
 
     def config_callback(self, config, level):
         rospy.loginfo("""Reconfigure Request: {target},\
             {kp}, {ki}, {kd}""".format(**config))
 
+        self.controller_.reset()
         self.controller_.setTarget(config.target)
         self.controller_.setKP(config.kp)
         self.controller_.setKI(config.ki)
@@ -44,12 +49,15 @@ class HoverControllerNode():
         return config
 
     def pose_callback(self, pose_msg):
-        z_cmd = self.controller_.update(pose_msg.pose.position.z, pose_msg.header.stamp.to_sec())
+        z_cmd, (u_p, u_i, u_d) = self.controller_.update(pose_msg.pose.position.z, pose_msg.header.stamp.to_sec())
         cmd = Wrench()
 
         if z_cmd is not None:
             cmd.force.z = z_cmd
             self.cmd_force_pub_.publish(cmd)
+            self._u_p_pub.publish(u_p)
+            self._u_i_pub.publish(u_i)
+            self._u_d_pub.publish(u_d)
 
 if __name__ == '__main__':
     rospy.init_node('hover_controller')

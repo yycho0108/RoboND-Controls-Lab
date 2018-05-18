@@ -165,15 +165,16 @@ def zn_tune(max_duration, kmin, kmax, kstep, rule='classic'):
     return (0, 0, 0)
 
 if __name__ == '__main__':
-    kp = 0
-    ki = 0
-    kd = 0
     target = 10
     current_altitude = 0
     current_time = 0
     samples = []
 
     rospy.init_node('hover_zn_tuner')
+    kp = rospy.get_param('~kp', 0.0)
+    ki = rospy.get_param('~ki', 0.0)
+    kd = rospy.get_param('~kd', 0.0)
+
     dr_client = dynamic_reconfigure.client.Client('/hover_controller', config_callback=dr_callback)
     pose_sub_ = rospy.Subscriber("/quad_rotor/pose", PoseStamped, pose_callback)
 

@@ -116,9 +116,9 @@ class AttitudeControllerNode():
 
 
         t = self.last_imu_.header.stamp.to_sec()
-        roll_cmd = self.roll_controller_.update(roll_meas, t)
-        pitch_cmd = self.pitch_controller_.update(pitch_meas, t)
-        yaw_cmd = self.yaw_controller_.update(yaw_meas, t)
+        roll_cmd, _ = self.roll_controller_.update(roll_meas, t)
+        pitch_cmd, _ = self.pitch_controller_.update(pitch_meas, t)
+        yaw_cmd, _ = self.yaw_controller_.update(yaw_meas, t)
 
 
         rospy.logdebug('roll meas:{},pitch_meas:{},yaw_meas:{},x:{},y:{},z:{},w:{}'.format(roll_meas,pitch_meas,yaw_meas,
